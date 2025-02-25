@@ -1,12 +1,9 @@
 import random, json, websocket, time, os, time, bs4, sys, console, re
-from t import get_T
-from tls_client import exceptions as tls_exceptions
 from kasada import salamoonder
 import tls_client
 import traceback
 import requests
 import json
-from curl_cffi import requests as cffi
 import sys
 import time
 from kopeechka import getMail, getCode
@@ -56,27 +53,15 @@ def create_account(password=None, username=None, chromeVersion=last_chrome_versi
         else:
             raise Exception("Unknown mailType (kopeechka|imap|custom)")
         console.info(f"Using {email} | Username {username}")
-        # proxy = random.choice(open("proxies.txt").readlines()).strip()
-        proxy = "nqpuxzivw2y70m4-country-id:B87gC65mTexLfQk@resi.rainproxy.io:9090"
+        proxy = random.choice(open("proxies.txt").readlines()).strip()
         client = tls_client.Session(client_identifier="chrome_120", random_tls_extension_order=True)
-        # client.proxies = {'https': f'http://{proxy}'}
         client.proxies = {'http': f'http://{proxy}', 'https': f'http://{proxy}'}
-        # client.proxies = {'http': f'http://{proxy}', 'https': f'http://{proxy}'}
         client.headers = {
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+            "user-agent": f"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{chromeVersion}.0.0.0 Safari/537.36",
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
             "accept-encoding": "gzip, deflate, br, zstd",
             "accept-language": "en-US,en;q=0.9",
         }
-        # client = tls_client.Session(client_identifier="chrome_120", random_tls_extension_order=True)
-        # client.proxy = f'http://{proxy}'
-        # ua = f"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{chromeVersion}.0.0.0 Safari/537.36"
-        # client.headers = {
-        #     "user-agent": ua,
-        #     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
-        #     "accept-encoding": "gzip, deflate, br, zstd",
-        #     "accept-language": "en-US,en;q=0.9",
-        # }
         client.get("https://kick.com/")
         x = client.get("https://kick.com/sanctum/csrf")
         if x.status_code != 200:
@@ -130,7 +115,6 @@ def create_account(password=None, username=None, chromeVersion=last_chrome_versi
             "password_confirmation": password,
             "isMobileRequest": True
         })
-        # r = client.post('https://kick.com/register', headers=headers, data=data)
         if r.status_code != 200:
             print("Just a moment" in r.text)
             console.error(f"Failed to register: {r.status_code}")
