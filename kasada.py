@@ -12,16 +12,16 @@ def salamoonder():
             if "taskId" not in response:
                 if response.get("error_description") == "Invalid API key.":
                     sys.exit("Invalid salamoonder.com API key")
-                return salamoonder(apiKey, pjs)
+                return salamoonder()
 
             taskId = response["taskId"]
             for _ in range(10):
                 result = requests.post("https://salamoonder.com/api/getTaskResult", headers=headers, data=json.dumps({"api_key": apiKey, "taskId": taskId}), timeout=30).json()
                 if result.get("status") == "ready":
                     if "error" in result.get("solution", {}) or "No solution created" in result.get("solution", {}):
-                        return salamoonder(apiKey, pjs)
+                        return salamoonder()
                     return result["solution"]
                 time.sleep(0.3)
         except Exception:
             time.sleep(0.3)
-    return salamoonder(apiKey, pjs)
+    return salamoonder()
